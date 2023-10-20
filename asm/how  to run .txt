@@ -1,0 +1,3 @@
+nasm -f bin exercize.asm -o exercize.bin
+
+ qemu-system-x86_64 exercize.bin
