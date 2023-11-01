@@ -1,9 +1,7 @@
-def fun(a):
-    if a<4 :
-        b=a|a-3
-    print("b = "+ b)
+def add(a,b):
+    return a+b
 
-try:
-    fun(5)
-except:
-    print("bah")
+
+a=10
+b=45
+print("sum:",add(a,b))
