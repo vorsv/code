@@ -54,6 +54,10 @@
   border-radius: 0 5px 5px 0;
   user-select: none;
 }
+img {
+  width: 100%;
+  height: auto;
+}
 .inte {
   height: 545px;
 }
@@ -71,6 +75,7 @@ body {
   margin-left: auto;
   margin-right: auto;
   width: 10%;
+  object-fit: cover;
 }
 /*when the user hovers,add a black background with some little opacity */
 .Back:hover, .forward:hover {
