@@ -24,7 +24,7 @@ void ask(){
     double a;
     cout << "enter number of root :";
     cin >> n;
-    cout << "enter number to find"<<n<<"th rt :";
+    cout << "enter number to find "<<n<<" th rt :";
     cin >> a;
     cout << atrt (a);
 }

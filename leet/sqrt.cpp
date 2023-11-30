@@ -6,7 +6,7 @@ class Solution {
     public:
     int u=0;
         float sqrt(double a, double b){
-            if (u < 30){
+            if (u < 300){
                 double b1 = (b + (a/b))/2;
                 u++;
                 return sqrt(a,b1);
@@ -25,6 +25,6 @@ class Solution {
 };
 int main(){
     Solution e;
-    cout << e.mySqrt(2147395599);
+    cout << e.mySqrt(15566);
     return 0;
 }
