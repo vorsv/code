@@ -4,7 +4,8 @@ using namespace std;
 static int u=0;
     
 double sqrt(double a, double b){
-    if (u < 30){
+    cout <<b<<"\n";
+    if (u < 20){
         double b1 = (b + (a/b))/2;
         u++;
         return sqrt(a,b1);
@@ -22,7 +23,7 @@ void ask(){
     double a;
     cout << "enter nuber to sqrt :";
     cin >> a;
-    cout << (int)sqrt (a);
+    cout << sqrt (a);
 }
 int main(){
     ask();

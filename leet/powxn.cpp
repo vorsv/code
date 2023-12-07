@@ -16,5 +16,5 @@ public:
 };
 int main(){
     Solution a;
-    cout << "nigga :" << a.myPow(2,2147483);
+    cout << "nigga :" << a.myPow(2,31);
     }

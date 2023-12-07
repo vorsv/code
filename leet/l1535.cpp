@@ -4,7 +4,7 @@ using namespace std;
 
 class Solution {
 vector<int> arr = {3,2,1};
-int n = 10, siz=(sizeof(arr)/sizeof(arr[0])),i=0;
+int n = 10, siz=(arr.size()),i=0;
 vector<int> win;
 public:
     Solution(){
