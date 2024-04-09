@@ -40,11 +40,11 @@ void in(struct tree *root){//le,rt,ro
 }
 int main(){
     struct tree *tree = createRoot(7);
-    inLft(tree,9);
+    inLft(tree,8);
     inRit(tree,10);
     inLft(tree->lft,2);
     inRit(tree->lft,1);
-    inLft(tree->lft->lft,12);
+    inLft(tree->lft->lft,9);
     inRit(tree->lft->lft,69);
     inRit(tree->rit,420);
     printf("\n\nInOrder\n-----------------\n");
