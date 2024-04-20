@@ -13,7 +13,7 @@ void extraLongFactorials(int n) {
     while (n>1) { 
         ans*=n;
         n--; 
-        std::cout<<n<<"  "<<ans<<"\n"; 
+        std::cout<<n<<"\t"<<ans<<"\n"; 
     }
     std::cout<<ans;
     
