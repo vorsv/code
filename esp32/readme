@@ -1,0 +1,5 @@
+ctrl + e + d to build and flash
+ctrl + e + b to build 
+ctrl + e + f to flash
+ctrl + e + r to reset
+ctrl + e + m to serial monitor
