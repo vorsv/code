@@ -23,27 +23,26 @@ public class LetterTriangleSnake{
             System.out.println();
             i++;
         }
-    }
-    public static void letterTriangleSnake() {
-        int a=96, i=0, j=0;
-        while(a < 122 && j<26 && i<26){
-            if( i%2==1){
-                for(int l=0;l<i;l++){ 
-                    if(a>=122) break;
-                    else System.out.print(((char)(a+1)) + " ");
-                    a++;
-                }
-                
-            }
-            else{
-                for(j=i;j>0;j--){
-                    if(a>=122) break;
-                    else System.out.print(((char)(a+j))+ " ");
-                }
-                a+=i;
-            }
-            System.out.println();
-            i++;
         }
-    }
+        public static void letterTriangleSnake() {
+            int a=64, i=0, j=0;
+            while(a < 90 && j<26 && i<26){
+                if( i%2==1){
+                    for(j=0;j<i;j++){ 
+                        if(a>=90) break;
+                        else System.out.print(((char)(a+1)) + " ");
+                        a++;
+                    }  
+                }
+                else{
+                    for(j=i;j>0;j--){
+                        if(a>=90) break;
+                        else System.out.print(((char)(a+j))+ " ");
+                    }
+                    a+=i;
+                }
+                System.out.println();
+                i++;
+            }
+        }
 }    
