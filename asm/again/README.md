@@ -1,0 +1,1 @@
+gcc -o hello -static -nostdlib hello.s
