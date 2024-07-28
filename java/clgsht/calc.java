@@ -1,7 +1,6 @@
 
 public class calc {
     public static void main(String[] args) {
-        System.out.println(args.length );
         try {
             if ((args.length == 3)) {           
                 float x = Float.parseFloat(args[0]);
