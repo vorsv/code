@@ -1,5 +1,4 @@
 #include<iostream>
-#include<cstdint>
 #include<cmath>
 
 class Prime{
@@ -12,7 +11,7 @@ class Prime{
         Prime(unsigned long long int a){
             unsigned long long int g=0;
             std::cout<<0<<"\t:"<< 2 << "\n" ;
-            for(unsigned long long int i=1;i<=INT64_MAX;i+=2){
+            for(unsigned long long int i=1;i<=9223372036854775807;i+=2){
                 if(a==0) break;
                 if(isPrime(i)){
                     std::cout<<g+1<<"\t:"<< i << "\n" ;
