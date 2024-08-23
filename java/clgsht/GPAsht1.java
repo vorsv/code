@@ -9,7 +9,7 @@ public class GPAsht1{
         for (int i = 0; i < n; i++) {
             if(grad[i]!=null){
                 System.out.println(grad[i]+".");
-                if      (grad[i].strip() == s ) point[i] = 10;
+                if      (grad[i].strip() == s )   point[i] = 10;
                 else if (grad[i].strip() == "a" ) point[i] = 9;
                 else if (grad[i].strip() == "a+") point[i] = 8;
                 else if (grad[i].strip() == "b" ) point[i] = 7;
@@ -17,7 +17,7 @@ public class GPAsht1{
                 else if (grad[i].strip() == "c" ) point[i] = 5;
                 else if (grad[i].strip() == "p" ) point[i] = 4;
                 else if (grad[i].strip() == "f" ) point[i] = 0;
-                // else                              point[i] = -1;
+                else                              point[i] = -1;
             }
             else {
                 System.out.println("Invalid Grade found at subject" + (i+1));
@@ -30,7 +30,7 @@ public class GPAsht1{
     public static float get(Scanner getc){
         System.out.print("Enter no of Subjects :");
         int n = getc.nextInt();
-
+ 
         int[] creds = getCreds(n,getc); 
 
         int[] point = gradeToMark(n,getc);
