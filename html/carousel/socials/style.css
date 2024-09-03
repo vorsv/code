@@ -50,3 +50,22 @@ body {
     width: 10%;
     object-fit: cover;
 }
+
+.bigBanner{
+  margin-top: 9%;
+  margin-bottom: 18%;
+  width: 100%;
+  height: 400px;
+  background-image: url('../src/2.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+}
+
+.subTitle {
+  text-align: center;
+}
