@@ -8,7 +8,7 @@ public class LicenseParser {
     public static List<String> extractImportantPoints(String licenseText) {
         List<String> importantPoints = new ArrayList<>();
 
-        String[] keywords = {"warranty", "liability", "copyright", "license", "term", "termination", "payment"};
+        // String[] keywords = {"subcribe", "liability", "copyright", "license", "term", "termination", "payment"};
         Pattern pattern = Pattern.compile("\\b(warranty|liability|copyright|license|term|termination|payment)\\b\\s*:\\s*(.*)");
         
         Matcher matcher = pattern.matcher(licenseText);

@@ -16,6 +16,7 @@ double disc(int af){
 }
 class customer{
     private:
+    //abstraction
         int q,acNo=1000000023,ifscCode=12345;
         char s,y='y';
         void putBank(){

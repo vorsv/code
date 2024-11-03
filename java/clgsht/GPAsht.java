@@ -36,7 +36,7 @@ public class GPAsht{
             System.out.print("Enter no of Subjects :");
             int n = get.nextInt();
             int[] creds = getCreds(n); 
-            String[] grad = getGrade(n);
+            String[] grad =             (n);
             int[] point = gradeToMark(grad);
             int total = sumSht(creds),score = scoreTot(point,creds);  
             return score/total;
