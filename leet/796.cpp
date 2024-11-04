@@ -10,7 +10,7 @@ class Solution {
         }
         bool rotateString(string s, string goal) {
             if( (s==goal) || s.length()<=1 ) return true;
-        if(s.length() != goal.length()) return false;
+            if(s.length() != goal.length()) return false;
                 for(int i=0; i<int(s.length()-1); i++){
                     if(rotate(s)==goal) return true;
                     s=rotate(s);
