@@ -25,8 +25,6 @@ void inEnd(struct node **head,int data){
         curr=curr->nxt;
     }
     curr->nxt=New;
-    
-
 }
 void inMid(struct node **head,int data,int pos){
     struct node *New = (struct node *)malloc(sizeof(struct node));
