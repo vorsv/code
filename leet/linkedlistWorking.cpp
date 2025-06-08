@@ -20,6 +20,14 @@ ListNode* vecToLinkList( vector<int> a){
     return curr;
 }
 
+void printLinkedList(ListNode* head){
+    ListNode* root = head;
+    while(root->next != nullptr) {
+        cout << root->val << ",";
+        root= root->next;
+    }
+}
+
 std::ostream& operator<<(std::ostream& os, ListNode* head) {
     ListNode* current = head;
     while (current != nullptr) {
@@ -33,32 +41,12 @@ std::ostream& operator<<(std::ostream& os, ListNode* head) {
 }
 
 
+
 class Solution {
     public:
         Solution(){
-            ListNode* a = vecToLinkList({18,6,10,3});
-            cout << insertGreatestCommonDivisors(a);
-    }
-    ListNode* insertGreatestCommonDivisors(ListNode* a){
-        ListNode* curr=a;
-        while(curr->next != nullptr){
-            ListNode* newe = new ListNode(gcd(curr->val,curr->next->val),curr->next);
-            newe->next = curr->next;
-            curr->next = newe;
-            curr = curr->next->next;
-        }
-        curr=nullptr;
-        delete curr;
-        return a;
-    }
-    int gcd(int a ,int b){
-        int temp=0;
-        while(b!=0){
-            temp = a;
-            a=b;
-            b=temp%a;
-        }
-        return a;
+            vector<int> o = {1,2,3,4,5};
+            printLinkedList(vecToLinkList(o));
     }
 };
 

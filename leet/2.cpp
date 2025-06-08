@@ -1,31 +1,49 @@
+#include<bits/stdc++.h>
+#include "ll.h"
 
-struct ListNode {
-    int val;
-    ListNode *next;
-    ListNode() : val(0), next(nullptr) {}
-    ListNode(int x) : val(x), next(nullptr) {}
-    ListNode(int x, ListNode *next) : val(x), next(next) {}
-};
-
+using namespace std;
 
 class Solution {
-public:
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        if(l1 == nullptr || l2 == nullptr) return nullptr;
-
-        struct ListNode* l3 = new ListNode(l1->val + l2->val);
-        struct ListNode *curr = l3;
-        while( l1->next != nullptr && l2->next != nullptr ){
-            l1=l1->next;
-            l2=l2->next;
-            add(curr,l1->val + l2->val);
-        }
-        return l3;
+    public:
+        Solution(){
+            ListNode* a = vecToLinkedList({1,8});
+            ListNode* b = vecToLinkedList({9});
+            cout << addTwoNumbers(a,b)<<"\n"<<a;
     }
-    void add(ListNode *gya,int a){
-        struct ListNode *New = new ListNode(a);
-        struct ListNode *curr = gya;
-        while (curr->next!=nullptr) curr=curr->next;
-        curr->next=New;
+    ListNode* addTwoNumbers(ListNode* l1,ListNode* l2){
+        int carry = 0;
+        ListNode* g = new ListNode,*curr = g,*a =l1, *b =l2;
+        while (a != nullptr || b != nullptr){
+            if(a != nullptr && b != nullptr){
+                curr->val =  (a -> val + b -> val + carry)%10;
+                carry = (a -> val + b -> val + carry)/10;
+            }
+            else if ( carry == 0 ){
+                if( a == nullptr) curr->val = b->val;
+                if( b == nullptr) curr->val = a->val;
+            }
+            else if ( carry != 0 ){
+                if( a != nullptr){
+                    curr->val =  (a -> val + carry)%10;
+                    carry = (a -> val + carry)/10;
+                }
+                if( b != nullptr) {
+                    curr->val =  (b -> val + carry)%10;
+                    carry = (b -> val + carry)/10;
+                }                
+            }
+            if( a != nullptr) a = a->next;
+            if( b != nullptr) b = b->next;
+            if(curr->next==nullptr && (a != nullptr || b != nullptr)) {
+                curr->next = new ListNode;
+                curr = curr->next; 
+            }
+        }
+        if (carry != 0) curr->next = new ListNode(carry);
+        return g;
     }
 };
+
+int main(){
+    Solution a;
+}
