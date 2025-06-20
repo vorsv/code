@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORSica: The CORS Unblocker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .header-gradient {
+            background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        #results-area, #history-area {
+            display: none;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .tab.active {
+            border-bottom-color: #3b82f6;
+            color: #3b82f6;
+            font-weight: 600;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <header class="header-gradient text-white p-6 shadow-md">
+        <div class="container mx-auto max-w-5xl">
+            <h1 class="text-3xl font-bold">CORSica: The CORS Unblocker</h1>
+            <p class="mt-1 text-blue-100">A developer's proxy for fetching cross-origin resources without CORS errors.</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-5xl p-4 md:p-8">
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Request Target</h2>
+            <div class="flex flex-col md:flex-row items-center gap-4">
+                <div class="relative flex-grow w-full">
+                    <i class="fa fa-link absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" id="urlInput" placeholder="Enter any URL to fetch..." class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                </div>
+                <button id="fetchButton" class="btn-primary text-white font-bold py-3 px-6 rounded-lg w-full md:w-auto flex items-center justify-center gap-2">
+                    <i class="fa fa-paper-plane"></i>
+                    <span>Fetch</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="loading" class="text-center py-8" style="display: none;">
+            <div class="loader mx-auto"></div>
+            <p class="mt-4 text-gray-600 font-medium">Fetching resource...</p>
+        </div>
+        
+        <div id="error-message" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md mt-6" style="display: none;"></div>
+
+        <div id="results-area" class="mt-8 bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-xl font-semibold text-gray-800">Request Details</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 text-sm">
+                    <div>
+                        <span class="font-semibold text-gray-600">Status:</span>
+                        <span id="status" class="ml-2 px-2 py-1 rounded-full"></span>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-gray-600">Time:</span>
+                        <span id="time" class="ml-2 text-gray-800"></span>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-gray-600">Size:</span>
+                        <span id="size" class="ml-2 text-gray-800"></span>
+                    </div>
+                     <div>
+                        <span class="font-semibold text-gray-600">Type:</span>
+                        <span id="type" class="ml-2 text-gray-800"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex border-b border-gray-200 bg-gray-50">
+                    <button class="tab active" onclick="showTab('content')">Content</button>
+                    <button class="tab" onclick="showTab('headers')">Headers</button>
+                    <button class="tab" onclick="showTab('code')">Code Snippet</button>
+                </div>
+
+                <div id="content-tab" class="tab-content active">
+                    <div class="p-4 flex justify-end gap-2 bg-gray-100 border-b border-gray-200">
+                        <button id="copyContentBtn" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-sm hover:bg-gray-300 transition"><i class="fa fa-copy mr-1"></i> Copy</button>
+                        <button id="downloadContentBtn" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-sm hover:bg-gray-300 transition"><i class="fa fa-download mr-1"></i> Download</button>
+                    </div>
+                    <pre class="p-4 text-sm overflow-x-auto bg-gray-800 text-white"><code id="response-content"></code></pre>
+                </div>
+                <div id="headers-tab" class="tab-content">
+                    <pre class="p-4 text-sm overflow-x-auto"><code id="response-headers"></code></pre>
+                </div>
+                <div id="code-tab" class="tab-content p-4">
+                     <select id="language-select" class="mb-2 p-2 border rounded-md">
+                        <option value="curl">cURL</option>
+                        <option value="javascript">JavaScript (fetch)</option>
+                        <option value="python">Python (requests)</option>
+                    </select>
+                    <pre class="p-4 text-sm overflow-x-auto bg-gray-800 text-white rounded-md"><code id="code-snippet"></code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div id="history-area" class="mt-8">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">History</h3>
+            <div id="history-list" class="space-y-2"></div>
+        </div>
+    </main>
+
+    <script>
+        const urlInput = document.getElementById('urlInput');
+        const fetchButton = document.getElementById('fetchButton');
+        const resultsArea = document.getElementById('results-area');
+        const historyArea = document.getElementById('history-area');
+        const historyList = document.getElementById('history-list');
+        const loadingDiv = document.getElementById('loading');
+        const errorMessageDiv = document.getElementById('error-message');
+        
+        const statusEl = document.getElementById('status');
+        const timeEl = document.getElementById('time');
+        const sizeEl = document.getElementById('size');
+        const typeEl = document.getElementById('type');
+        const contentEl = document.getElementById('response-content');
+        const headersEl = document.getElementById('response-headers');
+        const codeSnippetEl = document.getElementById('code-snippet');
+        const languageSelect = document.getElementById('language-select');
+        
+        const PROXY_URL = 'https://cors-anywhere.herokuapp.com/';
+
+        let requestHistory = JSON.parse(localStorage.getItem('corsicaHistory')) || [];
+
+        const updateHistoryUI = () => {
+            historyList.innerHTML = '';
+            if (requestHistory.length > 0) {
+                historyArea.style.display = 'block';
+                requestHistory.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'bg-white p-3 rounded-lg shadow-sm flex justify-between items-center';
+                    const statusClass = item.status >= 200 && item.status < 300 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                    div.innerHTML = `
+                        <div>
+                            <span class="font-mono text-sm text-gray-600">${item.url}</span>
+                            <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full ${statusClass}">${item.status}</span>
+                        </div>
+                        <div>
+                            <button class="text-blue-500 hover:text-blue-700 text-sm" onclick="reuseHistoryItem('${item.url}')"><i class="fa fa-redo mr-1"></i> Reuse</button>
+                            <button class="text-red-500 hover:text-red-700 text-sm ml-2" onclick="deleteHistoryItem('${item.id}')"><i class="fa fa-trash"></i></button>
+                        </div>
+                    `;
+                    historyList.appendChild(div);
+                });
+            } else {
+                historyArea.style.display = 'none';
+            }
+        };
+
+        const addToHistory = (url, status) => {
+            const historyItem = { id: Date.now().toString(), url, status };
+            requestHistory.unshift(historyItem);
+            if (requestHistory.length > 10) {
+                requestHistory.pop();
+            }
+            localStorage.setItem('corsicaHistory', JSON.stringify(requestHistory));
+            updateHistoryUI();
+        };
+
+        window.reuseHistoryItem = (url) => {
+            urlInput.value = url;
+            fetchButton.click();
+            window.scrollTo(0, 0);
+        };
+
+        window.deleteHistoryItem = (id) => {
+            requestHistory = requestHistory.filter(item => item.id !== id);
+            localStorage.setItem('corsicaHistory', JSON.stringify(requestHistory));
+            updateHistoryUI();
+        };
+
+        const fetchUrl = async () => {
+            let url = urlInput.value.trim();
+            if (!url) {
+                showError('Please enter a URL.');
+                return;
+            }
+            
+            // Add http:// if no protocol is present
+            if (!url.match(/^https?:\/\//)) {
+                url = 'https://' + url;
+                urlInput.value = url;
+            }
+
+            loadingDiv.style.display = 'block';
+            resultsArea.style.display = 'none';
+            errorMessageDiv.style.display = 'none';
+
+            const startTime = performance.now();
+
+            try {
+                const response = await fetch(PROXY_URL + url, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+
+                const endTime = performance.now();
+                const duration = (endTime - startTime).toFixed(2);
+                
+                const headers = {};
+                response.headers.forEach((value, key) => {
+                    headers[key] = value;
+                });
+                
+                const rawText = await response.text();
+                const size = new Blob([rawText]).size;
+
+                displayResults({
+                    status: response.status,
+                    statusText: response.statusText,
+                    duration: duration,
+                    size: size,
+                    contentType: headers['content-type'] || 'N/A',
+                    headers: headers,
+                    content: rawText,
+                    url: url
+                });
+                
+                addToHistory(url, response.status);
+
+            } catch (error) {
+                console.error(error);
+                showError('Failed to fetch the resource. The server may be down, or the URL might be incorrect or blocking proxy requests.');
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        };
+
+        const displayResults = (data) => {
+            // Status
+            statusEl.textContent = `${data.status} ${data.statusText}`;
+            if (data.status >= 200 && data.status < 300) {
+                statusEl.className = 'ml-2 px-2 py-1 rounded-full bg-green-100 text-green-800 text-xs font-semibold';
+            } else if (data.status >= 400) {
+                statusEl.className = 'ml-2 px-2 py-1 rounded-full bg-red-100 text-red-800 text-xs font-semibold';
+            } else {
+                statusEl.className = 'ml-2 px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 text-xs font-semibold';
+            }
+            
+            // Metrics
+            timeEl.textContent = `${data.duration} ms`;
+            sizeEl.textContent = `${(data.size / 1024).toFixed(2)} KB`;
+            typeEl.textContent = data.contentType.split(';')[0];
+            
+            // Headers
+            headersEl.textContent = Object.entries(data.headers)
+                .map(([key, value]) => `${key}: ${value}`)
+                .join('\n');
+
+            // Content
+            let formattedContent = data.content;
+            if (data.contentType.includes('application/json')) {
+                try {
+                    formattedContent = JSON.stringify(JSON.parse(data.content), null, 2);
+                } catch (e) { /* Not valid JSON, show raw */ }
+            }
+            contentEl.textContent = formattedContent;
+
+            // Show results
+            resultsArea.style.display = 'block';
+
+            // Setup download and copy
+            document.getElementById('copyContentBtn').onclick = () => copyToClipboard(data.content);
+            document.getElementById('downloadContentBtn').onclick = () => downloadContent(data.content, data.url);
+            
+            // Generate and display code snippet
+            updateCodeSnippet(data.url);
+            languageSelect.onchange = () => updateCodeSnippet(data.url);
+
+            showTab('content'); // Default to content tab
+        };
+        
+        const updateCodeSnippet = (url) => {
+            const lang = languageSelect.value;
+            let snippet = '';
+            switch (lang) {
+                case 'curl':
+                    snippet = `curl -X GET "${url}" \\ \n  -H "X-Requested-With: XMLHttpRequest"`;
+                    break;
+                case 'javascript':
+                    snippet = `fetch('${PROXY_URL}${url}', {
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest'
+  }
+})
+.then(response => response.text())
+.then(data => console.log(data))
+.catch(error => console.error('Error:', error));`;
+                    break;
+                case 'python':
+                    snippet = `import requests
+
+url = "${url}"
+proxy_url = "${PROXY_URL}"
+
+headers = {
+    'X-Requested-With': 'XMLHttpRequest'
+}
+
+response = requests.get(proxy_url + url, headers=headers)
+
+print(response.text)`;
+                    break;
+            }
+            codeSnippetEl.textContent = snippet;
+        };
+
+        const showError = (message) => {
+            errorMessageDiv.textContent = message;
+            errorMessageDiv.style.display = 'block';
+        };
+
+        window.showTab = (tabName) => {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            document.querySelector(`.tab[onclick="showTab('${tabName}')"]`).classList.add('active');
+        };
+
+        const copyToClipboard = (text) => {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                // You can add a small notification here if you like
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+            document.body.removeChild(textarea);
+        };
+
+        const downloadContent = (text, url) => {
+            const blob = new Blob([text], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            const filename = new URL(url).hostname + '_content.txt';
+            link.download = filename;
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        fetchButton.addEventListener('click', fetchUrl);
+        urlInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                fetchUrl();
+            }
+        });
+        
+        updateHistoryUI();
+
+    </script>
+</body>
+</html>

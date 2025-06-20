@@ -9,6 +9,7 @@
 std::unordered_set<std::string> visited_urls;
 std::vector<std::string> json_files;
 std::vector<std::string> csv_files;
+std::vector<std::string> pdf_files;
 
 // Callback for libcurl
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *output) {
@@ -56,6 +57,7 @@ std::string urljoin(const std::string &base, const std::string &relative) {
 }
 
 // Check for JSON/CSV files
+// Check for JSON/CSV/PDF files
 void check_data_files(const std::string &url) {
     if (url.find(".json") != std::string::npos) {
         json_files.push_back(url);
@@ -63,6 +65,9 @@ void check_data_files(const std::string &url) {
     } else if (url.find(".csv") != std::string::npos) {
         csv_files.push_back(url);
         std::cout << "[CSV] Found: " << url << std::endl;
+    } else if (url.find(".pdf") != std::string::npos) {
+        std::cout << "[PDF] Found: " << url << std::endl;
+        pdf_files.push_back(url);
     }
 }
 

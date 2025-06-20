@@ -17,6 +17,17 @@
 
 // Order of values will be same after performing above steps.
 
+
+
+// class Solution {
+// public:
+//     void deleteNode(ListNode *node)
+//     {
+//         node->val=node->next->val;
+//         node->next=node->next->next;
+//     }
+// };
+
 #include<bits/stdc++.h>
 #include "ll.h"
 
@@ -32,8 +43,11 @@ class Solution {
     }
     void deleteNode(ListNode* a){
         while(a->next->next != NULL){
-            a=
+            a ->val = a->next->val;
+            a=a->next;
         }
+        a ->val = a->next->val;
+        a->next=NULL;
     }
 };
 
